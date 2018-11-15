@@ -1,25 +1,50 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+//import logo from "./logo.svg";
+import "./App.css";
+
+import Circulargraph from "./Circulargraph";
 
 class App extends Component {
+  state = {
+    data: {
+      id: "5brs20",
+      Name: "Shell0",
+      TotalScore: [40, 60, 80, 70, 88],
+      Dividend: [45, 70, 90, 70, 90],
+      Balans: [40, 65, 70, 70, 82],
+      Growth: [35, 55, 64, 85, 44],
+      Valuation: [40, 50, 75, 73, 74]
+    },
+    year: 4
+  };
+
+  changeData = () => {
+    this.setState(oldState => {
+      if (oldState.year === 0) {
+        return { year: 4 };
+      }
+
+      return { year: oldState.year - 1 };
+    });
+  };
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <div>
+          <button onClick={this.changeData}>Change year, year index = {this.state.year}</button>
+        </div>
+
+        <svg width="300" height="250">
+          <Circulargraph
+            x={10}
+            y={10}
+            width={300}
+            height={250}
+            data={this.state.data}
+            year={this.state.year}
+          />
+        </svg>
       </div>
     );
   }
