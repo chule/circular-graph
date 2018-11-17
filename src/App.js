@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "./App.css";
 
 import Circulargraph from "./Circulargraph";
+//import Demo from "./Circulargraph/Demo"
 
 class App extends Component {
   state = {
@@ -32,19 +33,19 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <button onClick={this.changeData}>Change year, year index = {this.state.year}</button>
+          <button onClick={this.changeData}>
+            Change year, year index = {this.state.year}
+          </button>
         </div>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div style={{ width: "50%", height: "350px" }}>
+            <Circulargraph data={this.state.data} year={this.state.year} />
+          </div>
 
-        <svg width="300" height="250">
-          <Circulargraph
-            x={10}
-            y={10}
-            width={300}
-            height={250}
-            data={this.state.data}
-            year={this.state.year}
-          />
-        </svg>
+          <div style={{ width: "50%", height: "350px" }}>
+            <Circulargraph data={this.state.data} year={this.state.year} />
+          </div>
+        </div>
       </div>
     );
   }
