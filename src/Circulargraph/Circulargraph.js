@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import D3blackbox from "./D3blackbox";
 import * as d3 from "d3";
 
@@ -25,10 +25,30 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     spacing = 0.09;
 
   var dataUpdated = [
-    { index: 0.7, text: "Dividend", value: data.Dividend[year] / 100, allValues: data.Dividend },
-    { index: 0.6, text: "Balans", value: data.Balans[year] / 100, allValues: data.Balans  },
-    { index: 0.5, text: "Growth", value: data.Growth[year] / 100, allValues: data.Growth  },
-    { index: 0.4, text: "Valuation", value: data.Valuation[year] / 100, allValues: data.Valuation  }
+    {
+      index: 0.7,
+      text: "Dividend",
+      value: data.Dividend[year] / 100,
+      allValues: data.Dividend
+    },
+    {
+      index: 0.6,
+      text: "Balans",
+      value: data.Balans[year] / 100,
+      allValues: data.Balans
+    },
+    {
+      index: 0.5,
+      text: "Growth",
+      value: data.Growth[year] / 100,
+      allValues: data.Growth
+    },
+    {
+      index: 0.4,
+      text: "Valuation",
+      value: data.Valuation[year] / 100,
+      allValues: data.Valuation
+    }
   ];
 
   d3.select(anchor.current)
@@ -49,17 +69,17 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     })
     .cornerRadius(2);
 
-  var arcBody0 = d3
-    .arc()
-    .startAngle(0)
-    .endAngle(0)
-    .innerRadius(function(d) {
-      return d.index * radius;
-    })
-    .outerRadius(function(d) {
-      return (d.index + spacing) * radius;
-    })
-    .cornerRadius(2);
+  // var arcBody0 = d3
+  //   .arc()
+  //   .startAngle(0)
+  //   .endAngle(0)
+  //   .innerRadius(function(d) {
+  //     return d.index * radius;
+  //   })
+  //   .outerRadius(function(d) {
+  //     return (d.index + spacing) * radius;
+  //   })
+  //   .cornerRadius(2);
 
   var svg = d3
     .select(anchor.current)
@@ -105,40 +125,20 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
       return d.text.split("")[0];
     });
 
-  //tick();
-
-  //function tick() {
   arcs
-    .on("mouseover", function (d) {
-      console.log(d)
+    .style("stroke", "#fff")
+    .style("stroke-width", 1)
+    .on("mouseover", function(d) {
+      console.log(d);
+      d3.select(this).style("stroke-width", 0);
     })
-    // .each(function(d) {
-    //   this._value = d.value;
-    // })
-    // .data(dataUpdated)
-    // .each(function(d) {
-    //   d.previousValue = this._value;
-    // })
-    //.attr("d", arcBody0)
-    //.each(fieldTransition)
+    .on("mouseout", function(d) {
+      //console.log(d);
+      d3.select(this).style("stroke-width", 1);
+    })
     .transition()
-      // .attrTween("d", arcTween(arcBody0))
-      // //.delay(1000)
-      // .transition()
-      .duration(750)
-      .attrTween("d", arcTween(arcBody));
-  
-
-  // arcs
-  //   .transition()
-  //   .duration(750)
-  //   .attrTween("d", arcTween(arcBody));
-
-  // function fieldTransition() {
-  //   var field = d3.select(this).transition();
-
-  //   field.select(".arc-body").attrTween("d", arcTween(arcBody));
-  // }
+    .duration(750)
+    .attrTween("d", arcTween(arcBody));
 
   function arcTween(arc) {
     return function(d) {
