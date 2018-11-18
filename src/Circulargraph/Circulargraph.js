@@ -127,14 +127,14 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
 
   arcs
     .style("stroke", "#fff")
-    .style("stroke-width", 1)
+    .style("stroke-width", 2)
     .on("mouseover", function(d) {
       console.log(d);
       d3.select(this).style("stroke-width", 0);
     })
     .on("mouseout", function(d) {
       //console.log(d);
-      d3.select(this).style("stroke-width", 1);
+      d3.select(this).style("stroke-width", 2);
     })
     .transition()
     .duration(750)
