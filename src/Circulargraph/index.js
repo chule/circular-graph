@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Circulargraph from "./Circulargraph";
 import ResponsiveWrapper from "./ResponsiveWrapper";
+import "./style.css"
 
 class Graph extends Component {
   state = {
@@ -27,22 +28,22 @@ class Graph extends Component {
   render() {
     console.log(this.props);
 
-    const {
-      svgDimensions,
-    } = this.state;
+    const { svgDimensions } = this.state;
 
     return (
-      <svg width={svgDimensions.width} height={svgDimensions.height}>
-        <Circulargraph
-          x={0}
-          y={0}
-          width={svgDimensions.width}
-          height={svgDimensions.height}
-          data={this.props.data}
-          year={this.props.year}
-        />
-        {/* <Demo /> */}
-      </svg>
+      <Fragment>
+        <div className="tooltip"></div>
+        <svg width={svgDimensions.width} height={svgDimensions.height}>
+          <Circulargraph
+            x={0}
+            y={0}
+            width={svgDimensions.width}
+            height={svgDimensions.height}
+            data={this.props.data}
+            year={this.props.year}
+          />
+        </svg>
+      </Fragment>
     );
   }
 }

@@ -51,6 +51,8 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     }
   ];
 
+  var tooltip = d3.select(".tooltip");
+
   d3.select(anchor.current)
     .select("g")
     .remove();
@@ -69,17 +71,52 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     })
     .cornerRadius(2);
 
-  // var arcBody0 = d3
-  //   .arc()
-  //   .startAngle(0)
-  //   .endAngle(0)
-  //   .innerRadius(function(d) {
-  //     return d.index * radius;
-  //   })
-  //   .outerRadius(function(d) {
-  //     return (d.index + spacing) * radius;
-  //   })
-  //   .cornerRadius(2);
+    /** sparkline */
+
+  function sparkline(elemId, data) {
+
+    console.log(elemId, data)
+
+
+    var width = 150
+    var height = 30
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+
+    x.domain([0,4]);
+    y.domain([0,100]);
+
+    var line = d3.line()
+      .x(function(d, i) {
+        return x(i);
+      })
+      .y(function(d, i) {
+        return y(d);
+      });
+
+    var sparklineSvg = d3
+      .select(elemId)
+      .append("svg")
+      .attr("width", width)
+      .attr("class", "sparkline-wrapper-svg")
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(0, 2)");
+
+      sparklineSvg
+      .append("path")
+      .datum(data)
+      .attr("class", "sparkline")
+      .attr("id", "current-path-" + elemId.replace("#", ""))
+      .attr("d", line);
+
+
+
+
+
+  }
+
+  /** sparkline */
 
   var svg = d3
     .select(anchor.current)
@@ -131,9 +168,27 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     .on("mouseover", function(d) {
       console.log(d);
       d3.select(this).style("stroke-width", 0);
+      
+      tooltip
+        .html(
+          `<b>${d.text}</b><br/>
+          <div class="sparkGraph"></div>
+          ${d.allValues.join(" - ")}
+          `
+        )
+        .style("left", `${d3.event.pageX - 160}px`)
+        .style("top", `${d3.event.pageY - 80}px`)
+        .transition()
+        .duration(200)
+        .style("opacity", 0.9);
+
+        sparkline(".sparkGraph", d.allValues)
     })
     .on("mouseout", function(d) {
-      //console.log(d);
+      tooltip
+        .transition()
+        .duration(500)
+        .style("opacity", 0);
       d3.select(this).style("stroke-width", 2);
     })
     .transition()

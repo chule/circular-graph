@@ -46,6 +46,9 @@ class App extends Component {
             <Circulargraph data={this.state.data} year={this.state.year} />
           </div>
         </div>
+
+      <div className="testGraph"></div>
+
       </div>
     );
   }
