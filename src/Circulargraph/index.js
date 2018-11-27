@@ -26,8 +26,7 @@ class Graph extends Component {
   }
 
   render() {
-    console.log(this.props);
-
+    
     const { svgDimensions } = this.state;
 
     return (

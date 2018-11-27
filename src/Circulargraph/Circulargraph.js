@@ -5,8 +5,6 @@ import * as d3 from "d3";
 const Circulargraph = D3blackbox(function(anchor, props, state) {
   const { year, data, width, height } = props;
 
-  console.log(year);
-
   var colors = {
     red: "#f45b63",
     orange: "#f49d73",
@@ -20,6 +18,15 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
       ? colors.green
       : colors.orange;
   };
+
+  const setFontSize = radius => {
+    return radius <= 120
+    ? 11
+    : radius >= 180
+    ? 14
+    : 12;
+  }
+
 
   var radius = Math.min(width, height) / 1.9,
     spacing = 0.09;
@@ -71,22 +78,19 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     })
     .cornerRadius(2);
 
-    /** sparkline */
+  /** sparkline */
 
   function sparkline(elemId, data) {
-
-    console.log(elemId, data)
-
-
-    var width = 150
-    var height = 30
+    var width = 150;
+    var height = 30;
     var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
-    x.domain([0,4]);
-    y.domain([0,100]);
+    x.domain([0, 4]);
+    y.domain([0, 100]);
 
-    var line = d3.line()
+    var line = d3
+      .line()
       .x(function(d, i) {
         return x(i);
       })
@@ -103,17 +107,12 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
       .append("g")
       .attr("transform", "translate(0, 2)");
 
-      sparklineSvg
+    sparklineSvg
       .append("path")
       .datum(data)
       .attr("class", "sparkline")
       .attr("id", "current-path-" + elemId.replace("#", ""))
       .attr("d", line);
-
-
-
-
-
   }
 
   /** sparkline */
@@ -125,6 +124,7 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
 
   svg
     .append("text")
+    .attr("class", "center-text")
     .style("font-weight", "bold")
     .style("alignment-baseline", "middle")
     .style("text-anchor", "middle")
@@ -155,7 +155,9 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     .attr("transform", function(d) {
       return "translate(" + [0, -d.index * radius] + ")";
     })
-    .style("font-size", 11)
+    .style("font-size", function() {
+      return setFontSize(radius);
+    })
     .style("font-weight", "bold")
     .style("fill", setColor(data.TotalScore[year]))
     .text(function(d) {
@@ -166,9 +168,9 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
     .style("stroke", "#fff")
     .style("stroke-width", 2)
     .on("mouseover", function(d) {
-      console.log(d);
+      let position = anchor.current.getBoundingClientRect();
       d3.select(this).style("stroke-width", 0);
-      
+
       tooltip
         .html(
           `<b>${d.text}</b><br/>
@@ -176,13 +178,15 @@ const Circulargraph = D3blackbox(function(anchor, props, state) {
           ${d.allValues.join(" - ")}
           `
         )
-        .style("left", `${d3.event.pageX - 160}px`)
-        .style("top", `${d3.event.pageY - 80}px`)
+        // .style("left", `${d3.event.pageX - 160}px`)
+        // .style("top", `${d3.event.pageY - 80}px`)
+        .style("left", `${position.x + position.width / 2 - 140}px`)
+        .style("top", `${position.y + position.height / 2 - 40}px`)
         .transition()
         .duration(200)
         .style("opacity", 0.9);
 
-        sparkline(".sparkGraph", d.allValues)
+      sparkline(".sparkGraph", d.allValues);
     })
     .on("mouseout", function(d) {
       tooltip
